@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block title %}Order Meals — SkyWings{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <h1 class="page-title">🍱 In-Flight Meal Ordering</h1>
+
+  <!-- Flight Info Banner -->
+  <div style="background:linear-gradient(90deg,var(--primary-dark),var(--accent)); color:white; border-radius:var(--radius-lg); padding:1.25rem 1.75rem; margin-bottom:2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+    <div>
+      <div style="font-size:0.78rem; opacity:0.8; text-transform:uppercase; letter-spacing:0.06em">Flight</div>
+      <div style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700">
+        {{ ticket.flight_number }} · {{ ticket.origin }} → {{ ticket.destination }}
+      </div>
+    </div>
+    <div>
+      <div style="font-size:0.78rem; opacity:0.8; text-transform:uppercase; letter-spacing:0.06em">Seat</div>
+      <div style="font-size:1.2rem; font-weight:700">{{ ticket.seat_number }}</div>
+    </div>
+    <div>
+      <div style="font-size:0.78rem; opacity:0.8; text-transform:uppercase; letter-spacing:0.06em">Departure</div>
+      <div style="font-size:1rem; font-weight:600">{{ ticket.departure_time.strftime('%d %b %Y, %H:%M') }}</div>
+    </div>
+    <div>
+      <span style="background:rgba(255,255,255,0.2); padding:4px 14px; border-radius:20px; font-size:0.82rem;">
+        Ticket #TKT{{ '%06d'|format(ticket.ticket_id) }}
+      </span>
+    </div>
+  </div>
+
+  <div class="food-layout">
+
+    <!-- Order Form -->
+    <div>
+      <div class="card">
+        <div class="card-header">Select Your Meal</div>
+
+        <form method="POST" action="{{ url_for('food', ticket_id=ticket.ticket_id) }}">
+
+          <div class="form-group">
+            <label class="form-label">Meal Type</label>
+            <select name="meal_type" id="meal_type" class="form-control" required>
+              <option value="">-- Choose meal type --</option>
+              {% for meal_type in meal_options.keys() %}
+                <option value="{{ meal_type }}">
+                  {% if meal_type == 'Vegetarian' %}🥦{% elif meal_type == 'Non-Vegetarian' %}🍗{% elif meal_type == 'Vegan' %}🌱{% else %}🌾{% endif %}
+                  {{ meal_type }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Meal Selection</label>
+            <select name="meal_name" id="meal_name" class="form-control" required disabled>
+              <option value="">-- Select meal type first --</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Quantity</label>
+            <select name="quantity" class="form-control">
+              <option value="1">1 portion</option>
+              <option value="2">2 portions</option>
+              <option value="3">3 portions</option>
+            </select>
+          </div>
+
+          <!-- Meal preview cards (static display) -->
+          <div style="margin-bottom:1.5rem">
+            <div class="form-label" style="margin-bottom:0.75rem">Popular Options</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+              <div class="meal-card">
+                <span class="meal-icon">🥦</span>
+                <div>
+                  <div class="meal-name">Paneer Butter Masala</div>
+                  <div class="meal-price">₹350</div>
+                </div>
+              </div>
+              <div class="meal-card">
+                <span class="meal-icon">🍗</span>
+                <div>
+                  <div class="meal-name">Chicken Curry & Rice</div>
+                  <div class="meal-price">₹420</div>
+                </div>
+              </div>
+              <div class="meal-card">
+                <span class="meal-icon">🌱</span>
+                <div>
+                  <div class="meal-name">Quinoa Salad Bowl</div>
+                  <div class="meal-price">₹340</div>
+                </div>
+              </div>
+              <div class="meal-card">
+                <span class="meal-icon">🌾</span>
+                <div>
+                  <div class="meal-name">Grilled Chicken Salad</div>
+                  <div class="meal-price">₹390</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg">
+            ✅ Place Meal Order
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Order History Sidebar -->
+    <div>
+      <div class="card">
+        <div class="card-header">Your Orders for This Flight</div>
+
+        {% if existing_orders %}
+          <ul class="order-list">
+            {% for order in existing_orders %}
+            <li class="order-item">
+              <div>
+                <div style="font-weight:600; font-size:0.9rem">{{ order.meal_name }}</div>
+                <div style="font-size:0.78rem; color:var(--text-light)">
+                  {{ order.meal_type }} · Qty: {{ order.quantity }} ·
+                  <span class="status-badge {% if order.order_status == 'Ordered' %}status-pending{% elif order.order_status == 'Confirmed' %}status-confirmed{% else %}status-cancelled{% endif %}">
+                    {{ order.order_status }}
+                  </span>
+                </div>
+              </div>
+              <div style="font-weight:700; color:var(--primary-dark)">
+                ₹{{ '{:,.0f}'.format(order.price) }}
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+
+          <!-- Total -->
+          <div style="padding:0.75rem 0 0; border-top:2px solid var(--light-gray); display:flex; justify-content:space-between; font-weight:700; color:var(--primary-dark); margin-top:0.5rem">
+            <span>Total Meal Cost</span>
+            <span>₹{{ '{:,.0f}'.format(existing_orders|sum(attribute='price')) }}</span>
+          </div>
+
+        {% else %}
+          <div class="empty-state" style="padding:2rem">
+            <span class="icon" style="font-size:2.5rem">🍽</span>
+            <p style="color:var(--text-light); font-size:0.9rem">No meals ordered yet.<br>Use the form to add your first order!</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Tips -->
+      <div class="card mt-3" style="background:var(--off-white); border:1px solid var(--primary-light)">
+        <div style="font-weight:700; color:var(--primary-dark); margin-bottom:0.75rem">💡 Meal Tips</div>
+        <ul style="list-style:none; font-size:0.85rem; color:var(--text-mid); display:flex; flex-direction:column; gap:0.5rem">
+          <li>🥦 <strong>Vegetarian</strong> meals are freshly prepared on board</li>
+          <li>🌱 <strong>Vegan</strong> options use no animal products</li>
+          <li>🌾 <strong>Gluten-Free</strong> meals are safely separated</li>
+          <li>⏰ Orders must be placed before departure</li>
+        </ul>
+      </div>
+
+      <!-- Navigation -->
+      <div style="display:flex; gap:0.75rem; margin-top:1.25rem; flex-wrap:wrap">
+        <a href="{{ url_for('confirmation', ticket_id=ticket.ticket_id) }}" class="btn btn-outline btn-sm">
+          ← View Ticket
+        </a>
+        <a href="{{ url_for('my_bookings') }}" class="btn btn-outline btn-sm">
+          📋 My Bookings
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

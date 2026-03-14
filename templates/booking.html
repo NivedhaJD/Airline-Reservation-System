@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Book Flight {{ flight.flight_number }} — SkyWings{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <h1 class="page-title">✈ Book Your Seat</h1>
+
+  <div class="booking-layout">
+
+    <!-- Booking Form -->
+    <div class="card">
+      <div class="card-header">Passenger Details</div>
+
+      <form method="POST" action="{{ url_for('booking', flight_id=flight.flight_id) }}">
+        <div class="form-group">
+          <label class="form-label" for="passenger_name">Full Name (as on ID)</label>
+          <input type="text" id="passenger_name" name="passenger_name"
+                 class="form-control" placeholder="Full legal name"
+                 value="{{ session.get('full_name', '') }}" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="passport_no">Passport / ID Number</label>
+          <input type="text" id="passport_no" name="passport_no"
+                 class="form-control" placeholder="e.g. A1234567" />
+          <small style="color:var(--text-light); font-size:0.8rem">
+            Required for international flights.
+          </small>
+        </div>
+
+        <!-- Displayed info only -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Flight</label>
+            <input type="text" class="form-control" value="{{ flight.flight_number }} · {{ flight.airline_name }}" readonly />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Class</label>
+            <input type="text" class="form-control" value="{{ flight.flight_class }}" readonly />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">From</label>
+            <input type="text" class="form-control" value="{{ flight.origin }}" readonly />
+          </div>
+          <div class="form-group">
+            <label class="form-label">To</label>
+            <input type="text" class="form-control" value="{{ flight.destination }}" readonly />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Departure</label>
+            <input type="text" class="form-control"
+                   value="{{ flight.departure_time.strftime('%d %b %Y, %H:%M') }}" readonly />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Arrival</label>
+            <input type="text" class="form-control"
+                   value="{{ flight.arrival_time.strftime('%d %b %Y, %H:%M') }}" readonly />
+          </div>
+        </div>
+
+        <div style="background:var(--off-white); border-radius:8px; padding:1rem; margin-bottom:1.25rem; border-left:4px solid var(--primary-light);">
+          <small style="color:var(--text-light)">
+            ℹ A seat number will be automatically assigned upon booking. You can add meal preferences after booking.
+          </small>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-block">
+          ✅ Confirm Booking · ₹{{ '{:,.0f}'.format(flight.price) }}
+        </button>
+      </form>
+    </div>
+
+    <!-- Booking Summary Sidebar -->
+    <div class="booking-summary">
+      <h3>✈ Booking Summary</h3>
+
+      <!-- Hidden element for JS price display -->
+      <span id="flight-price" data-price="{{ flight.price }}" style="display:none"></span>
+
+      <div class="summary-row">
+        <span class="summary-label">Flight</span>
+        <span class="summary-value">{{ flight.flight_number }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Airline</span>
+        <span class="summary-value">{{ flight.airline_name }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Route</span>
+        <span class="summary-value">{{ flight.origin }} → {{ flight.destination }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Date</span>
+        <span class="summary-value">{{ flight.departure_time.strftime('%d %b %Y') }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Departure</span>
+        <span class="summary-value">{{ flight.departure_time.strftime('%H:%M') }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Arrival</span>
+        <span class="summary-value">{{ flight.arrival_time.strftime('%H:%M') }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Class</span>
+        <span class="summary-value">{{ flight.flight_class }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Seats Available</span>
+        <span class="summary-value">{{ flight.available_seats }}</span>
+      </div>
+
+      <div style="border-top:1px solid rgba(255,255,255,0.25); margin-top:1rem; padding-top:1rem;">
+        <div class="summary-row summary-total">
+          <span>Total</span>
+          <span id="total-display">₹{{ '{:,.0f}'.format(flight.price) }}</span>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem; background:rgba(255,255,255,0.12); border-radius:8px; padding:0.75rem; font-size:0.82rem; opacity:0.9;">
+        🔒 Secure Booking · Instant Confirmation<br>
+        🍱 Add meals after booking
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

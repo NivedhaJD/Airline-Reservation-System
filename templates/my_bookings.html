@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}My Bookings — SkyWings{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <h1 class="page-title">📋 My Bookings</h1>
+
+  {% if tickets %}
+    <p style="color:var(--text-light); margin-bottom:1.5rem">
+      You have <strong>{{ tickets|length }}</strong> booking(s).
+    </p>
+
+    <!-- Desktop Table -->
+    <div style="overflow-x:auto; border-radius:var(--radius-lg);">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Ticket ID</th>
+            <th>Flight</th>
+            <th>Route</th>
+            <th>Departure</th>
+            <th>Class</th>
+            <th>Seat</th>
+            <th>Passenger</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in tickets %}
+          <tr>
+            <td><strong>#TKT{{ '%06d'|format(t.ticket_id) }}</strong></td>
+            <td>
+              <strong>{{ t.flight_number }}</strong><br>
+              <small style="color:var(--text-light)">{{ t.airline_name }}</small>
+            </td>
+            <td>{{ t.origin }} → {{ t.destination }}</td>
+            <td>{{ t.departure_time.strftime('%d %b %Y') }}<br>
+                <small>{{ t.departure_time.strftime('%H:%M') }}</small>
+            </td>
+            <td>{{ t.flight_class }}</td>
+            <td>{{ t.seat_number or '—' }}</td>
+            <td>{{ t.passenger_name }}</td>
+            <td style="font-weight:700; color:var(--primary-dark)">
+              ₹{{ '{:,.0f}'.format(t.total_price) }}
+            </td>
+            <td>
+              <span class="status-badge status-{{ t.ticket_status.lower() }}">
+                {{ t.ticket_status }}
+              </span>
+            </td>
+            <td>
+              <div style="display:flex; gap:0.4rem; flex-wrap:wrap">
+                <a href="{{ url_for('confirmation', ticket_id=t.ticket_id) }}"
+                   class="btn btn-outline btn-sm">View</a>
+
+                {% if t.ticket_status == 'Confirmed' %}
+                  <a href="{{ url_for('food', ticket_id=t.ticket_id) }}"
+                     class="btn btn-primary btn-sm">🍱 Meal</a>
+
+                  <form method="POST" action="{{ url_for('cancel_ticket', ticket_id=t.ticket_id) }}"
+                        class="cancel-form" style="display:inline">
+                    <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                  </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  {% else %}
+    <div class="empty-state">
+      <span class="icon">🎫</span>
+      <h3>No Bookings Yet</h3>
+      <p>You haven't booked any flights. Start exploring available flights!</p>
+      <a href="{{ url_for('search') }}" class="btn btn-primary mt-3">Search Flights</a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

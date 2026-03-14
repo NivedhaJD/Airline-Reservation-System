@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Search Flights — SkyWings{% endblock %}
+
+{% block content %}
+<div class="page-container">
+
+  <!-- Search Header -->
+  <div class="card mb-3">
+    <div class="card-header">🔍 Search Available Flights</div>
+    <form method="POST" action="{{ url_for('search') }}" id="search-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="origin">From (Origin)</label>
+          <input type="text" id="origin" name="origin" class="form-control"
+                 placeholder="e.g. Mumbai"
+                 value="{{ search_params.get('origin', '') }}" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="destination">To (Destination)</label>
+          <input type="text" id="destination" name="destination" class="form-control"
+                 placeholder="e.g. Delhi"
+                 value="{{ search_params.get('destination', '') }}" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="date">Travel Date</label>
+          <input type="date" id="date" name="date" class="form-control"
+                 value="{{ search_params.get('date', '') }}" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Class</label>
+          <select name="flight_class" class="form-control">
+            <option value="">Any Class</option>
+            <option value="Economy"  {% if search_params.get('flight_class') == 'Economy'  %}selected{% endif %}>Economy</option>
+            <option value="Business" {% if search_params.get('flight_class') == 'Business' %}selected{% endif %}>Business</option>
+            <option value="First"    {% if search_params.get('flight_class') == 'First'    %}selected{% endif %}>First Class</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">🔍 Search Flights</button>
+      <a href="{{ url_for('search') }}" class="btn btn-outline" style="margin-left:0.5rem">Clear</a>
+    </form>
+  </div>
+
+  <!-- Results -->
+  {% if flights %}
+    <h2 class="page-title">✈ {{ flights|length }} Flight(s) Found</h2>
+    <div class="flights-grid">
+      {% for flight in flights %}
+      <div class="flight-card">
+        <div class="flight-card-header">
+          <span class="flight-number">{{ flight.flight_number }}</span>
+          <span class="flight-class-badge">{{ flight.flight_class }}</span>
+        </div>
+        <div class="flight-card-body">
+          <div class="flight-route">
+            <div>
+              <div class="city-name">{{ flight.origin }}</div>
+              <div class="city-sub">{{ flight.departure_time.strftime('%H:%M') }}</div>
+            </div>
+            <div class="route-line"></div>
+            <div style="text-align:right">
+              <div class="city-name">{{ flight.destination }}</div>
+              <div class="city-sub">{{ flight.arrival_time.strftime('%H:%M') }}</div>
+            </div>
+          </div>
+          <div class="flight-meta">
+            <div class="meta-item">
+              <div class="meta-label">Airline</div>
+              <div class="meta-value">{{ flight.airline_name }}</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">Date</div>
+              <div class="meta-value">{{ flight.departure_time.strftime('%d %b %Y') }}</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">Departure</div>
+              <div class="meta-value">{{ flight.departure_time.strftime('%H:%M') }}</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">Arrival</div>
+              <div class="meta-value">{{ flight.arrival_time.strftime('%H:%M') }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="flight-card-footer">
+          <div>
+            <div class="price-tag">₹{{ '{:,.0f}'.format(flight.price) }}<span>/person</span></div>
+            <div class="seats-info"><strong>{{ flight.available_seats }}</strong> of {{ flight.total_seats }} seats left</div>
+          </div>
+          {% if session.get('user_id') %}
+            <a href="{{ url_for('booking', flight_id=flight.flight_id) }}" class="btn btn-primary btn-sm">
+              Book Now →
+            </a>
+          {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-outline btn-sm">Login to Book</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  {% elif request.method == 'POST' %}
+    <!-- No results after search -->
+    <div class="empty-state">
+      <span class="icon">🔍</span>
+      <h3>No Flights Found</h3>
+      <p>Try different dates, cities, or remove some filters.</p>
+    </div>
+
+  {% else %}
+    <!-- Initial state - show instruction -->
+    <div class="empty-state">
+      <span class="icon">✈</span>
+      <h3>Search for Your Next Flight</h3>
+      <p>Fill in the form above and hit Search to find available flights.</p>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

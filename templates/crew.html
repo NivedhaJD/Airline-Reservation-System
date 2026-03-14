@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Crew Information — SkyWings{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <h1 class="page-title">👨‍✈️ Flight Crew Information</h1>
+
+  <!-- Filter by flight -->
+  <div class="card mb-3">
+    <form method="GET" action="{{ url_for('crew') }}">
+      <div style="display:flex; gap:1rem; align-items:flex-end; flex-wrap:wrap">
+        <div class="form-group" style="margin:0; flex:1; min-width:220px">
+          <label class="form-label">Filter by Flight</label>
+          <select name="flight_id" id="crew-flight-filter" class="form-control">
+            <option value="">-- All Flights --</option>
+            {% for f in flights %}
+              <option value="{{ f.flight_id }}"
+                {% if selected_flight == f.flight_id|string %}selected{% endif %}>
+                {{ f.flight_number }} · {{ f.origin }} → {{ f.destination }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-bottom:0">Filter</button>
+        {% if selected_flight %}
+          <a href="{{ url_for('crew') }}" class="btn btn-outline">Clear Filter</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+  <!-- Crew Cards -->
+  {% if crew_members %}
+    <p style="color:var(--text-light); margin-bottom:1.5rem">
+      Showing <strong>{{ crew_members|length }}</strong> crew member(s)
+    </p>
+
+    <!-- Group by flight for display -->
+    {% set ns = namespace(last_flight='') %}
+    {% for member in crew_members %}
+      {% if member.flight_number != ns.last_flight %}
+        {% if not loop.first %}</div>{% endif %}
+        <h3 style="color:var(--primary-dark); margin:1.5rem 0 1rem; font-size:1.15rem; display:flex; align-items:center; gap:0.5rem">
+          ✈ Flight {{ member.flight_number }}
+          <span style="font-size:0.85rem; color:var(--text-light); font-family:'DM Sans',sans-serif; font-weight:400">
+            {{ member.origin }} → {{ member.destination }}
+            · {{ member.departure_time.strftime('%d %b %Y, %H:%M') }}
+          </span>
+        </h3>
+        <div class="crew-grid">
+        {% set ns.last_flight = member.flight_number %}
+      {% endif %}
+
+      <div class="crew-card">
+        <div class="crew-avatar">
+          {% if member.role == 'Pilot' %}👨‍✈️
+          {% elif member.role == 'Co-Pilot' %}🧑‍✈️
+          {% elif member.role == 'Flight Attendant' %}💁
+          {% else %}🔧
+          {% endif %}
+        </div>
+        <div class="crew-name">{{ member.full_name }}</div>
+        <div class="crew-role">{{ member.employee_id }}</div>
+        <span class="crew-badge
+          {% if member.role == 'Pilot' %}badge-pilot
+          {% elif member.role == 'Co-Pilot' %}badge-copilot
+          {% elif member.role == 'Flight Attendant' %}badge-attendant
+          {% else %}badge-engineer{% endif %}">
+          {{ member.role }}
+        </span>
+        <div class="crew-flight-tag">
+          {{ member.experience }} year{{ 's' if member.experience != 1 else '' }} experience
+        </div>
+      </div>
+
+    {% endfor %}
+    </div><!-- close last crew-grid -->
+
+  {% else %}
+    <div class="empty-state">
+      <span class="icon">👨‍✈️</span>
+      <h3>No Crew Found</h3>
+      <p>No crew members match the selected flight.</p>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

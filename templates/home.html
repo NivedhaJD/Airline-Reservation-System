@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}SkyWings Airlines — Home{% endblock %}
+
+{% block content %}
+
+<!-- ====== Hero Section ====== -->
+<section class="hero">
+  <span class="hero-plane">✈</span>
+  <h1>Fly Smarter with SkyWings</h1>
+  <p>Book flights, order meals in-flight, and manage your journey — all in one place.</p>
+  <a href="{{ url_for('search') }}" class="btn btn-primary btn-lg">Search Flights</a>
+
+  <!-- Quick Search -->
+  <form method="POST" action="{{ url_for('search') }}" class="hero-search">
+    <div class="form-group" style="margin:0">
+      <label class="form-label">From</label>
+      <input type="text" name="origin" class="form-control" placeholder="e.g. Mumbai" />
+    </div>
+    <div class="form-group" style="margin:0">
+      <label class="form-label">To</label>
+      <input type="text" name="destination" class="form-control" placeholder="e.g. Delhi" />
+    </div>
+    <div class="form-group" style="margin:0">
+      <label class="form-label">Date</label>
+      <input type="date" name="date" class="form-control" />
+    </div>
+    <div class="form-group" style="margin:0">
+      <label class="form-label">Class</label>
+      <select name="flight_class" class="form-control">
+        <option value="">Any Class</option>
+        <option value="Economy">Economy</option>
+        <option value="Business">Business</option>
+        <option value="First">First Class</option>
+      </select>
+    </div>
+    <div>
+      <button type="submit" class="btn btn-primary btn-block" style="height:44px">🔍 Search</button>
+    </div>
+  </form>
+</section>
+
+<!-- ====== Why Choose Us ====== -->
+<div class="section-divider">
+  <h2>Why Fly with SkyWings?</h2>
+  <p>Exceptional service, competitive prices, and a seamless booking experience.</p>
+</div>
+
+<div class="features-row">
+  <div class="feature-item">
+    <span class="feature-icon">💺</span>
+    <div class="feature-title">Comfortable Seats</div>
+    <div class="feature-desc">Economy, Business & First Class options to suit every budget.</div>
+  </div>
+  <div class="feature-item">
+    <span class="feature-icon">🍱</span>
+    <div class="feature-title">In-Flight Meals</div>
+    <div class="feature-desc">Pre-order your favourite meals — veg, non-veg, vegan and more.</div>
+  </div>
+  <div class="feature-item">
+    <span class="feature-icon">👨‍✈️</span>
+    <div class="feature-title">Expert Crew</div>
+    <div class="feature-desc">Highly trained pilots and cabin crew ensuring a safe journey.</div>
+  </div>
+  <div class="feature-item">
+    <span class="feature-icon">⚡</span>
+    <div class="feature-title">Instant Booking</div>
+    <div class="feature-desc">Book in seconds and receive a digital ticket immediately.</div>
+  </div>
+</div>
+
+<!-- ====== Featured Flights ====== -->
+{% if flights %}
+<div class="section-divider" style="padding-bottom:1rem">
+  <h2>Available Flights</h2>
+  <p>Showing upcoming scheduled departures. Book your seat today!</p>
+</div>
+
+<div class="page-container" style="padding-top:0">
+  <div class="flights-grid">
+    {% for flight in flights %}
+    <div class="flight-card">
+      <div class="flight-card-header">
+        <span class="flight-number">{{ flight.flight_number }}</span>
+        <span class="flight-class-badge">{{ flight.flight_class }}</span>
+      </div>
+      <div class="flight-card-body">
+        <div class="flight-route">
+          <div>
+            <div class="city-name">{{ flight.origin }}</div>
+            <div class="city-sub">{{ flight.departure_time.strftime('%H:%M') if flight.departure_time else '' }}</div>
+          </div>
+          <div class="route-line"></div>
+          <div style="text-align:right">
+            <div class="city-name">{{ flight.destination }}</div>
+            <div class="city-sub">{{ flight.arrival_time.strftime('%H:%M') if flight.arrival_time else '' }}</div>
+          </div>
+        </div>
+        <div class="flight-meta">
+          <div class="meta-item">
+            <div class="meta-label">Airline</div>
+            <div class="meta-value">{{ flight.airline_name }}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Date</div>
+            <div class="meta-value">{{ flight.departure_time.strftime('%d %b %Y') if flight.departure_time else '' }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="flight-card-footer">
+        <div>
+          <div class="price-tag">₹{{ '{:,.0f}'.format(flight.price) }}<span>/person</span></div>
+          <div class="seats-info"><strong>{{ flight.available_seats }}</strong> seats left</div>
+        </div>
+        {% if session.get('user_id') %}
+          <a href="{{ url_for('booking', flight_id=flight.flight_id) }}" class="btn btn-primary btn-sm">Book Now</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="btn btn-outline btn-sm">Login to Book</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="text-center mt-4">
+    <a href="{{ url_for('search') }}" class="btn btn-outline">View All Flights →</a>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

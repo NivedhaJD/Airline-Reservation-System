@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Login — SkyWings{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="plane">✈</span>
+      <h2>Welcome Back</h2>
+      <p>Sign in to manage your bookings</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('login') }}">
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input type="email" id="email" name="email" class="form-control"
+               placeholder="you@example.com" required autocomplete="email" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input type="password" id="password" name="password" class="form-control"
+               placeholder="••••••••" required autocomplete="current-password" />
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg mt-2">
+        🔐 Sign In
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      Don't have an account?
+      <a href="{{ url_for('register') }}"><strong>Register here</strong></a>
+    </div>
+  </div>
+</div>
+{% endblock %}
