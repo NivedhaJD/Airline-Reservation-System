@@ -36,7 +36,11 @@ def get_db_connection():
     except Error as e:
         print(f"Database connection error: {e}")
         return None
-
+@app.route("/testdb")
+def testdb():
+    cursor.execute("SELECT COUNT(*) FROM Flight")
+    count = cursor.fetchone()
+    return f"Flights in database: {count}"
 def generate_seat_number():
     """Generate a random seat number like 12A, 5C, etc."""
     row = random.randint(1, 30)
