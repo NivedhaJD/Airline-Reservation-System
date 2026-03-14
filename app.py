@@ -526,12 +526,6 @@ def get_meals(meal_type):
     """Return JSON list of meals for a given meal type."""
     meals = MEAL_OPTIONS.get(meal_type, [])
     return jsonify(meals)
-
-# ============================================================
-# MAIN ENTRY POINT
-# ============================================================
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
 @app.route("/testdb")
 def testdb():
     import mysql.connector
@@ -549,3 +543,10 @@ def testdb():
     result = cursor.fetchone()
 
     return f"Flights in database: {result[0]}"
+
+
+# ============================================================
+# MAIN ENTRY POINT
+# ============================================================
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
