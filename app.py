@@ -36,11 +36,6 @@ def get_db_connection():
     except Error as e:
         print(f"Database connection error: {e}")
         return None
-@app.route("/testdb")
-def testdb():
-    cursor.execute("SELECT COUNT(*) FROM Flight")
-    count = cursor.fetchone()
-    return f"Flights in database: {count}"
 def generate_seat_number():
     """Generate a random seat number like 12A, 5C, etc."""
     row = random.randint(1, 30)
@@ -537,3 +532,20 @@ def get_meals(meal_type):
 # ============================================================
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+@app.route("/testdb")
+def testdb():
+    import mysql.connector
+
+    db = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="JDdsNv@6",
+        database="Airline_Reservation"
+    )
+
+    cursor = db.cursor()
+    cursor.execute("SELECT COUNT(*) FROM Flight")
+
+    result = cursor.fetchone()
+
+    return f"Flights in database: {result[0]}"
