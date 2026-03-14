@@ -23,7 +23,7 @@ app.secret_key = 'airline_secret_key_2024'
 DB_CONFIG = {
     'host': 'localhost',
     'user': 'root',          # Your MySQL username
-    'password': 'root',      # Your MySQL password
+    'password': 'JDdsNv@6',      # Your MySQL password
     'database': 'Airline_Reservation',
     'autocommit': False
 }
