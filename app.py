@@ -12,8 +12,26 @@ import random
 import string
 import os
 
-app = Flask(__name__)
+ 
 # Secret key for session management - change this in production
+app = Flask(__name__)
+
+@app.route("/testdb")
+def testdb():
+    conn = get_db_connection()
+
+    if not conn:
+        return "Database connection failed"
+
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM Flight")
+
+    result = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return f"Flights in database: {result[0]}"
 app.secret_key = 'airline_secret_key_2024'
 
 # ============================================================
@@ -526,24 +544,7 @@ def get_meals(meal_type):
     """Return JSON list of meals for a given meal type."""
     meals = MEAL_OPTIONS.get(meal_type, [])
     return jsonify(meals)
-@app.route("/testdb")
-def testdb():
-    import mysql.connector
-
-    db = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="JDdsNv@6",
-        database="Airline_Reservation"
-    )
-
-    cursor = db.cursor()
-    cursor.execute("SELECT COUNT(*) FROM Flight")
-
-    result = cursor.fetchone()
-
-    return f"Flights in database: {result[0]}"
-
+ 
 
 # ============================================================
 # MAIN ENTRY POINT
