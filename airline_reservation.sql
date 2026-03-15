@@ -183,5 +183,76 @@ SELECT * FROM Flight;
 SELECT * FROM Crew;
 SELECT * FROM Ticket;
 SELECT * FROM Food_Ordering;
+SELECT 
+U.full_name,
+F.flight_number,
+F.origin,
+F.destination,
+T.seat_number,
+T.total_price
+FROM Ticket T
+JOIN User U ON T.user_id = U.user_id
+JOIN Flight F ON T.flight_id = F.flight_id;
 
+-- Crew assigned to flights
+
+SELECT 
+F.flight_number,
+C.full_name,
+C.role,
+C.experience
+FROM Crew C
+JOIN Flight F ON C.flight_id = F.flight_id;
+
+-- Food orders with passenger and flight
+
+SELECT 
+U.full_name,
+F.flight_number,
+FO.meal_name,
+FO.quantity,
+FO.price
+FROM Food_Ordering FO
+JOIN User U ON FO.user_id = U.user_id
+JOIN Ticket T ON FO.ticket_id = T.ticket_id
+JOIN Flight F ON T.flight_id = F.flight_id;
+
+-- ============================================================
+-- SUBQUERIES
+-- ============================================================
+
+-- Most expensive flight
+
+SELECT flight_number, price
+FROM Flight
+WHERE price = (SELECT MAX(price) FROM Flight);
+
+-- Users who booked tickets
+
+SELECT full_name,email
+FROM User
+WHERE user_id IN (SELECT user_id FROM Ticket);
+
+-- Flights with below average seat availability
+
+SELECT flight_number,available_seats
+FROM Flight
+WHERE available_seats < (SELECT AVG(available_seats) FROM Flight);
+
+-- ============================================================
+-- AGGREGATION
+-- ============================================================
+
+SELECT 
+F.flight_number,
+COUNT(T.ticket_id) AS total_passengers
+FROM Flight F
+LEFT JOIN Ticket T ON F.flight_id = T.flight_id
+GROUP BY F.flight_number;
+
+-- ============================================================
+-- FINAL MESSAGE
+-- ============================================================
+
+SELECT 'DATABASE SETUP COMPLETED SUCCESSFULLY' AS STATUS;
 SELECT 'Database setup complete!' AS Message;
