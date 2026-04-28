@@ -104,7 +104,13 @@ INSERT INTO Flight(flight_number,airline_name,origin,destination,price,available
 ('SG301','SpiceJet','Kolkata','Hyderabad',3800,40,'2026-05-15 18:00:00','2026-05-15 20:15:00','Economy'),
 ('UK405','Vistara','Delhi','Mumbai',6000,100,'2026-05-11 08:00:00','2026-05-11 10:15:00','Business'),
 ('AI802','Air India','Bangalore','Delhi',5500,80,'2026-05-13 16:00:00','2026-05-13 18:45:00','Economy'),
-('6E502','IndiGo','Hyderabad','Chennai',1800,60,'2026-05-16 09:30:00','2026-05-16 10:45:00','Economy');
+('6E502','IndiGo','Hyderabad','Chennai',1800,60,'2026-05-16 09:30:00','2026-05-16 10:45:00','Economy'),
+('QP110','Akasa Air','Mumbai','Bangalore',3200,120,'2026-05-20 07:00:00','2026-05-20 08:45:00','Economy'),
+('AIX55','Air India Express','Delhi','Kochi',5200,95,'2026-05-21 11:30:00','2026-05-21 14:45:00','Economy'),
+('6E982','IndiGo','Mumbai','Goa',2800,110,'2026-05-22 15:00:00','2026-05-22 16:15:00','Economy'),
+('UK224','Vistara','Bangalore','Mumbai',7500,40,'2026-05-23 10:30:00','2026-05-23 12:15:00','First'),
+('SG882','SpiceJet','Ahmedabad','Mumbai',2400,85,'2026-05-24 20:00:00','2026-05-24 21:10:00','Economy'),
+('AI442','Air India','Kolkata','Delhi',4800,75,'2026-05-25 13:45:00','2026-05-25 16:15:00','Business');
 
 INSERT INTO Crew(flight_id,full_name,role,employee_id,experience) VALUES
 (1,'Capt. Rajesh Kumar','Pilot','EMP001',18),
