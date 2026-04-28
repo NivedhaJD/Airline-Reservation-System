@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Booking Confirmed — SkyWings{% endblock %}
+{% block title %}Booking Confirmed — AltitudeX{% endblock %}
 
 {% block content %}
 <div class="confirmation-container">
@@ -92,6 +92,12 @@
           <div class="label">Booked On</div>
           <div class="value">{{ ticket.booking_date.strftime('%d %b %Y') }}</div>
         </div>
+        {% if ticket.caretaker_name %}
+        <div class="ticket-detail" style="grid-column: span 3; margin-top: 0.5rem; border-top: 1px dashed var(--neon-border); padding-top: 0.5rem;">
+          <div class="label" style="color: var(--primary);">Elderly Assistance / Caretaker</div>
+          <div class="value" style="color: var(--white); font-size: 1.1rem;">👤 {{ ticket.caretaker_name }} (Cabin Crew)</div>
+        </div>
+        {% endif %}
       </div>
     </div>
 

@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.env
+venv/
+.vscode/
+.idea/
+*.log
+check_ticket.py
+debug_booking.py
+replace_script.py
+test_app.py
+update_db_caretaker.py

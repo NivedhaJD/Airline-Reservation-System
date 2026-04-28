@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}SkyWings Airlines — Home{% endblock %}
+{% block title %}AltitudeX Airlines — Home{% endblock %}
 
 {% block content %}
 
 <!-- ====== Hero Section ====== -->
 <section class="hero">
   <span class="hero-plane">✈</span>
-  <h1>Fly Smarter with SkyWings</h1>
+  <h1>Fly Smarter with AltitudeX</h1>
   <p>Book flights, order meals in-flight, and manage your journey — all in one place.</p>
   <a href="{{ url_for('search') }}" class="btn btn-primary btn-lg">Search Flights</a>
 
@@ -41,7 +41,7 @@
 
 <!-- ====== Why Choose Us ====== -->
 <div class="section-divider">
-  <h2>Why Fly with SkyWings?</h2>
+  <h2>Why Fly with AltitudeX?</h2>
   <p>Exceptional service, competitive prices, and a seamless booking experience.</p>
 </div>
 
@@ -80,7 +80,13 @@
     {% for flight in flights %}
     <div class="flight-card">
       <div class="flight-card-header">
-        <span class="flight-number">{{ flight.flight_number }}</span>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="flight-number">{{ flight.flight_number }}</span>
+          <span class="live-pulse-container">
+            <span class="pulse-dot"></span>
+            <span class="pulse-text">LIVE</span>
+          </span>
+        </div>
         <span class="flight-class-badge">{{ flight.flight_class }}</span>
       </div>
       <div class="flight-card-body">

@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
           mealNameSelect.innerHTML = '<option value="">-- Select a meal --</option>';
           meals.forEach(meal => {
             const opt = document.createElement('option');
-            opt.value       = meal.name;
+            opt.value       = meal.meal_id;
             opt.textContent = `${meal.name}  —  ₹${meal.price.toFixed(2)}`;
             mealNameSelect.appendChild(opt);
           });

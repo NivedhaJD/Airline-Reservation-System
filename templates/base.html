@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}SkyWings Airlines{% endblock %}</title>
+  <title>{% block title %}AltitudeX Airlines{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;600;700&family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈</text></svg>" />
   {% block extra_head %}{% endblock %}
@@ -13,7 +16,7 @@
   <!-- ====== Navigation Bar ====== -->
   <nav class="navbar">
     <a href="{{ url_for('home') }}" class="navbar-brand">
-      <span class="plane-icon">✈</span> SkyWings
+      <span class="plane-icon">✈</span> AltitudeX
     </a>
 
     <!-- Hamburger for mobile -->
@@ -58,7 +61,12 @@
 
   <!-- ====== Footer ====== -->
   <footer>
-    <p>© 2024 <span>SkyWings Airlines</span> · Built with ✈ for College Project · All rights reserved.</p>
+    <div style="display:flex; justify-content:center; gap:2rem; margin-bottom:1rem; font-size:0.75rem; opacity:0.6; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">
+      <span style="color:var(--primary); text-shadow: 0 0 5px var(--primary-glow);">● SYSTEM ONLINE</span>
+      <span style="border-left: 1px solid rgba(255,255,255,0.2); padding-left: 2rem;">NETWORK: SECURE</span>
+      <span style="border-left: 1px solid rgba(255,255,255,0.2); padding-left: 2rem;">ENCRYPTION: AES-256</span>
+    </div>
+    <p>&copy; 2026 <span>AltitudeX</span> Airlines. Digital Skyways Initiative. All rights reserved.</p>
   </footer>
 
   <script src="{{ url_for('static', filename='script.js') }}"></script>
