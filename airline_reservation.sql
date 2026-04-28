@@ -92,11 +92,11 @@ ADD CONSTRAINT chk_ticket_price CHECK (total_price > 0);
 -- 4 SAMPLE DATA
 -- =========================
 
-INSERT INTO User(full_name,email,password_hash) VALUES
-('Rahul Sharma','rahul@gmail.com','hash123'),
-('Ananya Iyer','ananya@gmail.com','hash123'),
-('David Joseph','david@gmail.com','hash123'),
-('Priya Nair','priya@gmail.com','hash123');
+INSERT INTO User(full_name, email, password_hash, phone, dob, gender) VALUES
+('Rahul Sharma', 'rahul@gmail.com', 'scrypt:32768:8:1$placeholder$password123', '9876543210', '1995-06-15', 'Male'),
+('Ananya Iyer', 'ananya@gmail.com', 'scrypt:32768:8:1$placeholder$password123', '9887766554', '1998-03-22', 'Female'),
+('David Joseph', 'david@gmail.com', 'scrypt:32768:8:1$placeholder$password123', '9112233445', '1990-11-05', 'Male'),
+('Priya Nair', 'priya@gmail.com', 'scrypt:32768:8:1$placeholder$password123', '9988774433', '2000-01-10', 'Female');
 
 INSERT INTO Flight(flight_number,airline_name,origin,destination,price,available_seats,departure_time,arrival_time,flight_class) VALUES
 ('AI101','Air India','Mumbai','Delhi',4500,50,'2026-05-10 10:00:00','2026-05-10 12:30:00','Economy'),
