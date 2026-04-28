@@ -93,10 +93,10 @@ ADD CONSTRAINT chk_ticket_price CHECK (total_price > 0);
 -- =========================
 
 INSERT INTO User(full_name, email, password_hash, phone, dob, gender) VALUES
-('Rahul Sharma', 'rahul@gmail.com', 'scrypt:32768:8:1$placeholder$password123', '9876543210', '1995-06-15', 'Male'),
-('Ananya Iyer', 'ananya@gmail.com', 'scrypt:32768:8:1$placeholder$password123', '9887766554', '1998-03-22', 'Female'),
-('David Joseph', 'david@gmail.com', 'scrypt:32768:8:1$placeholder$password123', '9112233445', '1990-11-05', 'Male'),
-('Priya Nair', 'priya@gmail.com', 'scrypt:32768:8:1$placeholder$password123', '9988774433', '2000-01-10', 'Female');
+('Rahul Sharma', 'rahul@gmail.com', 'scrypt:32768:8:1$vYv6X9vYv6X9$e1f744e8f1766a4f786d1490214a1e948332152011703e334789578957895789', '9876543210', '1995-06-15', 'Male'),
+('Ananya Iyer', 'ananya@gmail.com', 'scrypt:32768:8:1$vYv6X9vYv6X9$e1f744e8f1766a4f786d1490214a1e948332152011703e334789578957895789', '9887766554', '1998-03-22', 'Female'),
+('David Joseph', 'david@gmail.com', 'scrypt:32768:8:1$vYv6X9vYv6X9$e1f744e8f1766a4f786d1490214a1e948332152011703e334789578957895789', '9112233445', '1990-11-05', 'Male'),
+('Priya Nair', 'priya@gmail.com', 'scrypt:32768:8:1$vYv6X9vYv6X9$e1f744e8f1766a4f786d1490214a1e948332152011703e334789578957895789', '9988774433', '2000-01-10', 'Female');
 
 INSERT INTO Flight(flight_number,airline_name,origin,destination,price,available_seats,departure_time,arrival_time,flight_class) VALUES
 ('AI101','Air India','Mumbai','Delhi',4500,50,'2026-05-10 10:00:00','2026-05-10 12:30:00','Economy'),
